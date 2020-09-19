@@ -1,0 +1,43 @@
+---
+# tasks file for mysql_db
+
+    - name: Install MySQL database
+      apt:
+        name: [
+          mysql-server,
+          mysql-client
+          ]
+        state: present
+      become: yes
+
+    - name: Start MySQL Service
+      service:
+        name: mysql
+        state: started
+        enabled: yes
+      become: yes
+
+
+    - name: Install Python packages needed for mysql_db
+      pip:
+        name: [PyMySQL]
+        state: present
+        executable: pip
+
+#creation doesn't work because of PyMySQL not found first time
+# But it works second time. May not be worth fixing. Move to Python3 instead
+    - name: Create Application Database
+      mysql_db:
+        name: "{{db_name}}"
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        state: present
+      become: yes
+
+    - name: Create Database user
+      mysql_user:
+        name: "{{db_user}}"
+        password: "{{db_password}}"
+        priv: '*.*:ALL'
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        state: present
+        host: '%'
