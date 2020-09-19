@@ -28,15 +28,15 @@
 # But it works second time. May not be worth fixing. Move to Python3 instead
     - name: Create Application Database
       mysql_db:
-        name: "{{db_name}}"
+        name: "{{ db_name }}"
         login_unix_socket: /var/run/mysqld/mysqld.sock
         state: present
       become: yes
 
     - name: Create Database user
       mysql_user:
-        name: "{{db_user}}"
-        password: "{{db_password}}"
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
         priv: '*.*:ALL'
         login_unix_socket: /var/run/mysqld/mysqld.sock
         state: present
